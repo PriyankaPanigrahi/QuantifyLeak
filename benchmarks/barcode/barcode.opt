@@ -1,0 +1,61 @@
+"BARCODE.schd"
+q000 1 - | wh=0,bl=1,eoc=0,memw=0,data=0,addr=0,eop=0 q001;
+q001 2 (eop == 0) | breakflag = 0 q002 
+      !(eop == 0) | - q031;
+q002 2 (breakflag != 1) | - q003 
+      !(breakflag != 1) | - q006;
+q003 2 (clk != 1) | - q003 
+      !(clk != 1) | eop=0 q004;
+q004 2 (reset == 1) | eop=1,breakflag=1 q005 
+      !(reset == 1) | - q005;
+q005 2 (start == 1) | breakflag = 1 q002 
+      !(start ==1 ) | - q002;
+q006 2 (eop == 0) | breakflag=0 q007 
+      !(eop == 0) | - q001;
+q007 2 (actnum != num && white != 255 && breakflag == 0 && eop == 0) | breakflag=0 q008 
+      !(actnum != num && white != 255 && breakflag == 0 && eop == 0) | - q001;
+q008 2 (breakflag != 1) | - q009 
+      !(breakflag != 1) | - q012;
+q009 2 (clk != 1) | - q009 
+      !(clk != 1) | eop = 0 q010;
+q010 2 (reset == 1) | eop = 1, breakflag = 1 q011 
+      !(reset == 1) | - q011;
+q011 2 (scan == 1) | breakflag=1 q008 
+      !(scan == 1) | - q008;
+q012 2 (eop == 0) | flag=wh,actnum=0,white=0,black=0,eoc=0,breakflag=0 q013 
+      !(eop == 0) | - q007;
+q013 4 (black != 255 && breakflag == 0) | - q014 
+       (white != 255) | - q014 
+       !(black != 255 && breakflag == 0) | - q026 
+       !(white != 255) | - q026;
+q014 2 (video == wh) | - q015 
+      !(video == wh) | - q021;
+q015 2 (clk != 1) | - q015 
+      !(clk != 1) | eop=0 q016;
+q016 2 (reset == 1) | eop = 1, breakflag = 1 q017 
+      !(reset == 1) | - q017;
+q017 1 - | - q018;
+q018 2 (flag == bl) | white = white + 1, actnum = actnum + 1, memw = 0 q019 
+      !(flag == bl) | white = white + 1, memw = 1 q019;
+q019 1 - | black=0,flag=wh,data=white q020;
+q020 2 (eop == 0) | addr = actnum q013 
+      !(eop == 0) | - q013;
+q021 2 (clk != 1) | - q021 
+      !(clk != 1) | eop=0 q022;
+q022 2 (reset == 1) | eop=1,breakflag=1 q023 
+       !(reset == 1) | - q023;
+q023 1 - | black = black + 1 q024;
+q024 2 (flag == wh) | actnum = actnum + 1, memw = 0 q025 
+       !(flag == wh) | memw = 1 q025;
+q025 1 - | flag = bl, white = 0, data = black q020;
+q026 2 (eop==0) | memw=0,eoc=1,breakflag=0 q027 
+       !(eop==0) | - q007;
+q027 2 (start != 0 && breakflag==0) | - q028 
+       !(start != 0 && breakflag==0) | - q007;
+q028 2 (clk != 1) | - q028 
+       !(clk!=1) | eop=0 q029;
+q029 2 (reset==1) | eop=1,breakflag=1 q030 
+      !(reset==1) | - q030;
+q030 2 (start==0) | breakflag=1 q027 
+      !(start==0) | - q027;
+q031 0;

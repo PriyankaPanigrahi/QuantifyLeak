@@ -1,0 +1,86 @@
+"IEEE754_nu.org"
+q00 1 - | actualMantissa=0 q01;
+q01 2 (input1<0) | sign1=1 q02 
+     !(input1<0) | sign1=0 q02;
+q02 1 - | mantissa1=input1%TWO_RAISED_23,exponent1=input1*2 q03;
+q03 1 - | mantissa1=mantissa1+TWO_RAISED_23,exponent1=exponent1/TWO_RAISED_24 q04;
+q04 2 (input2<0) | sign2=1 q05 
+     !(input2<0) | sign2=0 q05;
+q05 1 - | mantissa2=input2%TWO_RAISED_23,exponent2=input2*2 q06;
+q06 1 - | mantissa2=mantissa2+TWO_RAISED_23,exponent2=exponent2/TWO_RAISED_24 q07;
+q07 4 (option==1) | - q08 
+       (option==2) | - q08 
+       !(option==1) | - q025 
+       !(option==2) | - q025;
+q08 1 - | diff=exponent1-exponent2 q09;
+q09 2 (diff>0) | - q010 
+     !(diff>0) | - q011;
+q010 2 (diff>0) | mantissa2=mantissa2/2,diff=diff-1 q010  
+      !(diff>0) | exponent=exponent1 q013;
+q011 2 (diff<0) | - q012 
+      !(diff<0) | exponent=exponent1 q013;
+q012 2 (diff<0) | mantissa1=mantissa1/2,diff=diff+1 q012 
+      !(diff<0) | exponent=exponent2 q013;
+q013 2 (sign1==1) | mantissa1=-mantissa1 q014 
+      !(sign1==1) | - q014;
+q014 2 (sign2==1) | mantissa2=-mantissa2 q015 
+      !(sign2==1) | - q015;
+q015 2 (option==1) | mantissa=mantissa1+mantissa2 q016 
+      !(option==1) | mantissa=mantissa1-mantissa2 q016;
+q016 1 - | sign=0 q017;
+q017 2 (mantissa<0) | sign=1,mantissa=-mantissa q018 
+      !(mantissa<0) | - q018;
+q018 1 - | value=mantissa/TWO_RAISED_23 q019;
+q019 1 - | value=value%4 q020;
+q020 2 (value==0) | - q021 
+       !(value==0) | - q023;
+q021 1 - | condtemp=mantissa/TWO_RAISED_23 q054;
+q054 1 - | condtemp=condtemp%4 q022;
+q022 2 (exponent!=0&&condtemp!=1) | mantissa=mantissa*2,exponent=exponent-1 q021 
+      !(exponent!=0&&condtemp!=1) | - q025;
+q023 2 (value==2) | mantissa=mantissa/2,exponent=exponent+1 q025 
+      !(value==2) | - q024;
+q024 2 (value==3) | mantissa=mantissa/2,exponent=exponent+1 q025 
+       !(value==3) | - q025;
+q025 2 (option==3) | - q026 
+       !(option==3) | - q037;
+q026 2 (sign1==sign2) | sign=0 q027 
+      !(sign1==sign2) | sign=1 q027;
+q027 1 - | exponent=exponent1+exponent2,mantissa_mult=mantissa1*mantissa2 q028;
+q028 1 - | exponent=exponent-127,value=mantissa_mult/TWO_RAISED_46 q029;
+q029 1 - | value=value%4 q030;
+q030 2 (value==0) | - q031 
+      !(value==0) | - q033;
+q031 1 - | temp2=mantissa_mult/TWO_RAISED_46 q053;
+q053 1 - | temp2=temp2%4 q032;
+q032 2 (exponent!=0&&temp2!=1) | exponent=exponent-1,mantissa_mult=mantissa_mult*2 q031 
+      !(exponent!=0&&temp2!=1) | - q035;
+q033 2 (value==2) | mantissa_mult=mantissa_mult/2,exponent=exponent+1 q035 
+      !(value==2) | - q034;
+q034 2 (value==3) | mantissa_mult=mantissa_mult/2,exponent=exponent+1 q035 
+      !(value==3) | - q035;
+q035 1 - | mantissa=mantissa_mult/TWO_RAISED_23 q036;
+q036 1 - | mantissa=mantissa%TWO_RAISED_23 q037;
+q037 2 (option==4) | - q038 
+       !(option==4) | - q049;
+q038 2 (sign1==sign2) | sign=0 q039 
+      !(sign1==sign2) | sign=1 q039;
+q039 1 - | diff=exponent1-exponent2 q040;
+q040 2 (diff>0) | - q041 
+      !(diff>0) | - q042;
+q041 2 (diff>0) | mantissa2=mantissa2/2,diff=diff-1 q041 
+      !(diff>0) | - q044;
+q042 2 (diff<0) | - q043 
+      !(diff<0) | - q044;
+q043 2 (diff<0) | mantissa1=mantissa1/2,diff=diff+1 q043 
+      !(diff<0) | - q044;
+q044 1 - | exponent=0,mantissa=mantissa1/mantissa2 q045;
+q045 2 (mantissa!=1) | exponent=exponent+1,temp3=mantissa%2,temp4=actualMantissa/2 q046 
+      !(mantissa!=1) | exponent=exponent+127,temp6=actualMantissa/512 q048;
+q046 1 - | temp5=temp3*TWO_RAISED_31,mantissa=mantissa/2 q047;
+q047 1 - | actualMantissa=temp5+temp4 q045;
+q048 1 - | mantissa=TWO_RAISED_23+temp6 q049;
+q049 1 - | temp7=exponent*TWO_RAISED_23,temp8=sign*TWO_RAISED_31 q050;
+q050 1 - | temp9=temp7+temp8,temp10=mantissa%TWO_RAISED_23 q051;
+q051 1 - | result=temp9+temp10 q052;
+q052 0;

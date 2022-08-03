@@ -1,0 +1,56 @@
+"LRU_nu.schd"
+q100 1 - | eop=0,breakLoop=0 q101;
+q101 2 (clk!=1) | - q101 
+      !(clk!=1) | - q102;
+q102 2 (eop==0) | - q103 
+      !(eop==0) | - q133;
+q103 2 (clk!=1) | - q103 
+      !(clk!=1) | eop=0,breakLoop=0 q104;
+q104 2 (reset==1) | eop=1,breakLoop=1 q105 
+      !(reset==1) | - q105;
+q105 2 (eop==0) | found=0,newGuy=mru,i=0 q106 
+      !(eop==0) | - q102;
+q106 2 (i<last&&found==0&&breakLoop==0) | temp=0,j=0 q107 
+      !(i<last&&found==0&&breakLoop==0) | - q113;
+q107 2 (j<=i) | j=j+1,temp=temp*256 q107 
+       !(j<=i) | temp2=temp+8 q108;
+q108 1 - | temp_list=list%temp2 q109;
+q109 1 - | temp_list=temp_list/temp q110;
+q110 2 (temp_list==newGuy) | found=1 q111 
+      !(temp_list==newGuy) | i=i+1 q111;
+q111 2 (clk!=1) | - q111 
+     !(clk!=1) | eop=0,breakLoop=0 q112;
+q112 2 (reset==1) | eop=1,breakLoop=1 q106 
+      !(reset==1) | - q106;
+q113 2 (eop==0) | - q114 
+      !(eop==0) | - q102;
+q114 2 (found==1) | pushTo=i,eop=0 q116 
+      !(found==1) | - q115 ;
+q115 2 (last<7) | pushTo=last+1,eop=0 q135 
+      !(last<7) | pushTo=last,eop=0 q134;
+q135 1 - | last=pushTo q116;
+q134 1 - | last=pushTo q116;
+q116 2 (clk!=1) | - q116 
+      !(clk!=1) | - q117;
+q117 2 (reset==1) | eop=1 q118 
+      !(reset==1) | - q118;
+q118 2 (eop==0) | temp=0,j=0,eop=0 q119 
+      !(eop==0) | - q102;
+q119 2 (j<=pushTo) | j=j+1,temp=temp*256 q119 
+      !(j<=pushTo) | - q120;
+q120 2 (reset==1) | temp_list=list%temp,temp1=temp*256,eop=1 q121 
+      !(reset==1) | temp_list=list%temp,temp1=temp*256 q124;
+q121 1 - | list=list/temp1,temp_list=temp_list*256 q122;
+q122 1 - | list=list*temp1 q123;
+q123 1 - | list=list+temp_list q127;
+q124 1 - | list=list/temp1,temp_list=temp_list*256 q125;
+q125 1 - | list=list*temp1 q126;
+q126 1 - | list=list+temp_list q127;
+q127 2 (eop==0) | list=list/256 q128 
+      !(eop==0) | - q102;
+q128 1 - | list=list*256,temp3=last+1 q129;
+q129 1 - | list=list+newGuy,temp3=temp3*256,temp4=last*256 q130;
+q130 1 - | temp_list=list%temp3 q131;
+q131 1 - | temp_list=temp_list/temp4 q132;
+q132 1 - | lru=temp_list q102;
+q133 0;

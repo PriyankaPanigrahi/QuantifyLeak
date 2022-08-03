@@ -1,0 +1,1 @@
+clk reset video start
