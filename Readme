@@ -13,9 +13,7 @@ Folder/file Structure
 
 1.4. High.txt - the list of selected high inputs from the input list (update this file to run for different high inputs)
 
-2. bin - it containts the executable and high/sensitive input file
-
-2.1. quantifyleak - the executable to run our tool
+2.1. bin/quantifyleak - the executable to run our tool
 
 How to run?
 
