@@ -1,34 +1,26 @@
 
 This tool measures the total information leaks for a program with some choosen high inputs by the user.
 
-
 Folder/file Structure
-
 
 1. benchmarks - it containts the benchmarks in FSMD (finite state machine with datapaths) format 
 
-1.1. filename.org - the original/source FSMD 
+1.1. benchmarkname.org - the original/source FSMD 
 
-1.2. filename.opt - the optimized FSMD generated from the source program
+1.2. benchmarkname.opt - the optimized FSMD generated from the source program
 
 1.3. Input.txt - the list of inputs to the source and optimized FSMDs
 
 1.4. High.txt - the list of selected high inputs from the input list (update this file to run for different high inputs)
 
-
-
 2. bin - it containts the executable and high/sensitive input file
 
 2.1. quantifyleak - the executable to run our tool
-
-
 
 How to run?
 
 Use the following command from the bin directory to run our tool
 
 ./quantifyleak ../benchmarks/benchmarkname/filename ../benchmarks/benchmarkname/High.txt
-
-
 
 Note: Currently, mention only one high input in the High.txt file from the Input.txt for the choosen benchmark.
