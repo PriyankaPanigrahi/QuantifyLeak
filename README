@@ -3,7 +3,7 @@ This tool measures the total information leaks for a program with some choosen h
 
 Folder/file Structure
 
-1. benchmarks - it containts the benchmarks in FSMD (finite state machine with datapaths) format 
+1. benchmarks - it containts the benchmarks in FSMD (finite state machine with datapaths) format and their inputs
 
 1.1. benchmarkname.org - the original/source FSMD 
 
