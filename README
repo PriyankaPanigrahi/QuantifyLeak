@@ -7,7 +7,7 @@ Folder/file Structure
 
 1.1. benchmarkname.org - the original/source FSMD 
 
-1.2. benchmarkname.opt - the optimized FSMD generated from the source program
+1.2. benchmarkname.opt - the optimized FSMD generated from the optimized program. The optimized program is generated from the source program in SPARK compiler.
 
 1.3. Input.txt - the list of inputs to the source and optimized FSMDs
 
